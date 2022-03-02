@@ -1,0 +1,89 @@
+Step 1 -- Creating a Date Dim Table But this time i am using Calender Fnx to get the Starting Date and End date
+
+Calender = CALENDAR(MIN('Daily Sales Report'[Date]),MAX('Daily Sales Report'[Date]))
+
+
+
+Step 2 Then you have to create Column name for For Year Column
+Year = 'Date'[Date].[Year]
+
+For Month Column
+Month = 'Date'[Date].[Month]
+
+For Days Column
+Days = FORMAT('Date'[Date], "DDD")
+
+ ------------- Step 3 Go to your Model view and Create R/Ship between Date and date 
+
+
+				STEP 4 - CREATE SOME COOL MEAURES
+
+				--Okay nah, lets look at Last Day Sales --
+Last Day Sales = 
+Var Last_Date = MAX('Calender'[Date])
+
+Return
+CALCULATE(SUM('Daily Sales Report'[Sales Amount]), 'Calender'[Date]=Last_Date) //i am looking for last day sales amount sha
+
+------------------------------------------------------------------
+		-- STEP 5 Okay nah, lets look at [ Same Day of Last Week Sales ]-- 
+		In fact you can copy the DAX for last Day and paste and only subtract from 7days
+
+	Same Day of Last Week Sales = 
+	Var Same_Day_Of_Last_Week = MAX('Date'[Date]) -7 //whatever is the last day, we take it and minus it from the past 7 fucking days.lol
+
+	Return
+	CALCULATE(SUM('Daily Sales Report'[Sales Amount]), 'Date'[Date]=Same_Day_Of_Last_Week) //i am looking for last day sales amount sha
+
+-----------------------------------------------------------------------------
+
+			STEP 6 -- LOOKING AT GROWthS FROM LAST WEEK SALES IN %
+Growth From last week & = DIVIDE([Last Day Sales]-[Same Day of Last Week Sales],[Same Day of Last Week Sales],BLANK())
+
+
+-----------------------------------------------------------------------------
+
+			STEP 7 how has her sales figure has grown By Month to Date
+
+Month_To_Date(MTD) = TOTALMTD(SUM('Daily Sales Report'[Sales Amount]),'Calendar'[Date])
+
+
+-----------------------------------------------------------------------------
+			Step 6 - Looking at her Last Month to Date Sales
+Last Month to Date Sales = CALCULATE([Month_To_Date(MTD)],DATEADD('Date'[Date],-1,MONTH))
+			OR
+Last Month to Date Sales = CALCULATE([Month_To_Date(MTD)],DATEADD('Calendar'[Date],-1,MONTH))
+
+
+-----------------------------------------------------------------------------
+
+			Step 7 - Okay nah, lets look at Monthly to Date Growth % 
+
+MTD Growth % = DIVIDE([Month_To_Date(MTD)]-[Last Month to Date Sales],[Last Month to Date Sales],BLANK())
+
+
+Daily GRowth cOlor = IF([Growth From Last week]<0,"Red", "Green")
+MTD Growth COlor = IF([MTD Growth]<0,"Red", "Green")
+
+-- select the Growth from last week % ->Then go to Data color fx >Field > pick  Daily GRowth cOlor measures
+Also pick Category fx and repeat the same measure color 
+
+			Year to Date Another way of doin it using DatesYTD Function
+Sales Year to Date method 2 = CALCULATE(SUM('Daily Sales Report'[Sales Amount]),DATESYTD('Daily Sales Report'[Date]))
+
+Truckout distribution
+local and bridging lo bri
+Male and female
+
+Len(Donald) 7 -- actually remove trailing and leading spaces
+
+lowecase(duplicate)
+
+January 1985
+
+January          1985
+
+error replace with null
+
+num1 = int(input('enter num1'))
+num2 = int(input('enter num2'))
